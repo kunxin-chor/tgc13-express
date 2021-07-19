@@ -6,6 +6,16 @@ const wax = require('wax-on')
 let app = express();
 app.set('view engine', 'hbs');
 
+// register a helper to check if two values are the same
+hbs.handlebars.registerHelper('ifEquals', function(arg1, arg2, options){
+    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+//     if (arg1 == arg2) {
+//         return options.fn(this);
+//     } else {
+//         return options.inverse(this)
+//     }
+// })
+
 // Inform Express where to find static images
 app.use(express.static('public'))
 
@@ -29,6 +39,17 @@ app.get('/', function(req,res){
 
 app.get('/contact-us', function(req,res){
     res.render('contact');
+})
+
+app.get('/fruits', function(req,res){
+    let fruits = ['apples', 'bananas', 'cherries', 'durains'];
+    let isRaining = true;
+    let favouriteFruit = "oranges";
+    res.render('fruits', {
+        'fruits': fruits,
+        'rain': isRaining,
+        'favourite': favouriteFruit
+    })
 })
 
 // START THE SERVER
