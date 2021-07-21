@@ -10,6 +10,9 @@ app.set('view engine', 'hbs');
 // client-side (ie. browser)
 app.use(express.static('public'))
 
+// Setup Wax On (for templates with HBS)
+wax.on(hbs.handlebars);
+wax.setLayoutPath('./views/layouts')
 
 // define my routes
 app.get('/', function(req,res){
