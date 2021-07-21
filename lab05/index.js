@@ -14,7 +14,7 @@ hbs.handlebars.registerHelper('ifEquals', function(arg1, arg2, options){
 //     } else {
 //         return options.inverse(this)
 //     }
-// })
+})
 
 // Inform Express where to find static images
 app.use(express.static('public'))

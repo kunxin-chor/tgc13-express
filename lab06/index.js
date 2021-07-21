@@ -34,6 +34,20 @@ app.post('/add-food', function(req,res){
     res.send("Thank you, " + fullname);
 })
 
+app.get('/show-number-form', function(req,res){
+    res.render("add_numbers")
+})
+
+app.post('/show-number-form', function(req,res){
+    console.log(req.body);
+    let number1 = req.body.first_number;
+    let number2 = req.body.second_number;
+    let total = parseInt(number1) + parseInt(number2);
+   res.render('sum', {
+       'total': total
+   })
+    
+});
 
 // start the server
 app.listen(3000, function(){
