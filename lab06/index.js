@@ -14,9 +14,24 @@ app.use(express.static('public'))
 wax.on(hbs.handlebars);
 wax.setLayoutPath('./views/layouts')
 
-// define my routes
-app.get('/', function(req,res){
+// enable forms
+app.use( express.urlencoded({
+    'extended': false
+}))
 
+app.get('/', function(req,res){
+    res.send("Hello")
+})
+
+// define my routes
+app.get('/add-food', function(req,res){
+    res.render('add_food')
+})
+
+app.post('/add-food', function(req,res){
+    console.log(req.body);
+    let fullname = req.body.fullname;
+    res.send("Thank you, " + fullname);
 })
 
 
