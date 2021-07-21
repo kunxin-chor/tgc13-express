@@ -60,6 +60,14 @@ app.post('/add-food', function(req,res){
     // will be an array with more than one string inside, if req.body.tags is an array
     console.log("Selected tags=", tags);
 
+    let cusine = req.body.cusine;
+    console.log("selected cusine is", cusine);
+
+    // we want to store the selected ingredients in an array with the name 'ingredients'
+    let ingredients = req.body.ingredients || [];
+    ingredients = Array.isArray(ingredients) ? ingredients : [ ingredients ];
+
+    console.log("selected ingredients are:", ingredients)
 
     res.send("Thank you, " + fullname);
 })
@@ -72,7 +80,15 @@ app.post('/show-number-form', function(req,res){
     console.log(req.body);
     let number1 = req.body.first_number;
     let number2 = req.body.second_number;
-    let total = parseInt(number1) + parseInt(number2);
+    let operation = req.body.operation;
+    let total = 0;
+    if (operation == 'add') {
+        total = parseInt(number1) + parseInt(number2);
+    } else if (operation == 'subtract') {
+        total = parseInt(number1) - parseInt(number2);
+    } else {
+        total = parseInt(number1) * parseInt(number2);
+    }
    res.render('sum', {
        'total': total
    })

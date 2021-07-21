@@ -19,6 +19,28 @@
         <input type="checkbox" value="gluten-free" name="tags"/><label>Gluten Free</label>
         <input type="checkbox" value="homecooked" name="tags"/><label>Homecooked</label>
     </div>
+    <div>
+        <label class="form-label">Cusine</label>
+        <select class="form-control" name="cusine">
+            <option value="chinese">中華料理</option>
+            <option value="indian">マレー料理</option>
+            <option value="malay">インド料理</option>
+            <option>Western Food</option>
+            <option>Others</option>
+        </select>
+    </div>
+
+    <div>
+        <label class="form-label">Ingredients</label>
+        <select class="form-control" name="ingredients" multiple>
+            <option value="chicken">Chicken</option>
+            <option value="duck">Duck</option>
+            <option value="tomato">Tomato</option>
+            <option value="potato">Potato</option>
+            <option value="brocoli">Brocoli</option>
+        </select>
+    </div>
+
     <input type="submit" value="Submit" class="btn btn-primary my-3"/>
 </form>
 {{/block}}
