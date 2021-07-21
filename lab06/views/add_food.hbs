@@ -6,6 +6,19 @@
         <label class="form-label">Full Name</label>
         <input type="text" class="form-control" name="fullname"/>
     </div>
+    <div>
+        <label class="form-label">Meal</label>
+        <input type="radio" value="breakfast" name="meal"/><label>Breakfast</label>
+        <input type="radio" value="lunch" name="meal"/><label>Lunch</label>
+        <input type="radio" value="dinner" name="meal"/><label>Dinner</label>
+    </div>
+    <div>
+        <label class="form-label">Tags</label>
+        <input type="checkbox" value="vegan" name="tags"/><label>Vegan</label>
+        <input type="checkbox" value="dairy-free" name="tags"/><label>Dariy Free</label>
+        <input type="checkbox" value="gluten-free" name="tags"/><label>Gluten Free</label>
+        <input type="checkbox" value="homecooked" name="tags"/><label>Homecooked</label>
+    </div>
     <input type="submit" value="Submit" class="btn btn-primary my-3"/>
 </form>
 {{/block}}

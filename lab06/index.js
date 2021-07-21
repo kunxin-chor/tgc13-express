@@ -31,6 +31,36 @@ app.get('/add-food', function(req,res){
 app.post('/add-food', function(req,res){
     console.log(req.body);
     let fullname = req.body.fullname;
+
+    // how to handle checkboxes
+    // 1. if it is undefined, change it to store an empty array
+    // 2. if it is just a single string, convert it to
+    // an array containing that single string
+    // 3. if it is an array, then leave it as it is
+    // let tags = [];
+    // // check if req.body.tags is defined
+    // // if req.body.tags is undefined, it is equ. to false
+    // if (req.body.tags) {
+    //     // check if req.body.tags is an array?
+    //     if (Array.isArray(req.body.tags)) {
+    //         tags = req.body.tags;
+    //     } else {
+    //         // if not req.body.tags is not an array,
+    //         // then it must be a single string
+    //         tags = [ req.body.tags ]
+    //     }
+    // }
+
+    // alternative method
+    let tags = req.body.tags || [];
+    tags = Array.isArray(tags) ? tags : [ tags ]
+    
+    // tags will be an empty array, if req.body.tags is undefined
+    // will be an array with just one string inside, if req.body.tags is a string
+    // will be an array with more than one string inside, if req.body.tags is an array
+    console.log("Selected tags=", tags);
+
+
     res.send("Thank you, " + fullname);
 })
 
