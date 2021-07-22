@@ -40,9 +40,28 @@ app.get('/pets/create', function(req,res){
 })
 
 // process the form
-app.post('/pets/create', function(req,res){
+app.post('/pets/create', async function(req,res){
     console.log(req.body);
-    res.send(req.body);
+    let newPet = {
+        "id": Math.floor(Math.random() * 1000000 + 10000),
+        "category": {
+          "id": Math.floor(Math.random() * 1000000 + 10000),
+          "name": req.body.category
+        },
+        "name": req.body.name,
+        "photoUrls": [
+          "string"
+        ],
+        "tags": [
+          {
+            "id": 0,
+            "name": "string"
+          }
+        ],
+        "status": req.body.status
+      }
+    await axios.post('https://petstore.swagger.io/v2/post', newPet);
+    res.send('Pet created')
 })
 
 // START SERVER
