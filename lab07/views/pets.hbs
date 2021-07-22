@@ -8,6 +8,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Category</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -15,7 +16,10 @@
         <tr>
             <td>{{this.id}}</td>
             <td>{{this.name}}</td>
-            <td>{{this.cateogry.name}}</td>
+            <td>{{this.category.name}}</td>
+            <td>
+                <a href="/pets/{{this.id}}/update">Edit</a>
+            </td>
         </tr>
         {{/each}}
 

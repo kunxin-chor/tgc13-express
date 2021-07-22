@@ -45,7 +45,7 @@ app.post('/pets/create', async function(req,res){
     let newPet = {
         "id": Math.floor(Math.random() * 1000000 + 10000),
         "category": {
-          "id": Math.floor(Math.random() * 1000000 + 10000),
+          "id": 1,
           "name": req.body.category
         },
         "name": req.body.name,
@@ -59,10 +59,50 @@ app.post('/pets/create', async function(req,res){
           }
         ],
         "status": req.body.status
-      }
-    await axios.post('https://petstore.swagger.io/v2/post', newPet);
-    res.send('Pet created')
+      }      
+    await axios.post('https://petstore.swagger.io/v2/pet', newPet);
+    res.redirect('/pets')
 })
+
+// step 1: retrieve the information of the pet that the user
+// wants to update and display in the form
+app.get('/pets/:petID/update', async function(req,res){
+    let petID = req.params.petID;
+    // get the information of the record that we want to update
+    let response = await axios.get('https://petstore.swagger.io/v2/pet/' + petID);
+    // display the information of the record in the form
+    res.render('edit_pet', {
+        'pet': response.data
+    })    
+});
+
+// step 2: update the pet base on the user's input
+app.post('/pets/:petID/update', async function(req, res){
+  let petID = req.params.petID;
+  // write the changes back to the database
+  let pet = {
+    "id": petID,
+    "category": {
+      "id": 1,
+      "name":  req.body.category
+    },
+    "name": req.body.name,
+    "photoUrls": [
+      "string"
+    ],
+    "tags": [
+      {
+        "id": 0,
+        "name": "string"
+      }
+    ],
+    "status": req.body.status
+  }  
+  await axios.put('https://petstore.swagger.io/v2/pet', pet);
+  res.redirect('/pets')
+})
+
+
 
 // START SERVER
 app.listen(3000, function(req,res){
