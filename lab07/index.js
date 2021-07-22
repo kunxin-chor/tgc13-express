@@ -102,7 +102,20 @@ app.post('/pets/:petID/update', async function(req, res){
   res.redirect('/pets')
 })
 
+app.get('/pets/:petID/delete', async function(req,res){
+    let petID = req.params.petID;
+    // get the information of the record that we want to update
+    let response = await axios.get('https://petstore.swagger.io/v2/pet/' + petID);
+    res.render('confirm_delete', {
+        'pet': response.data
+    })
+})
 
+app.post('/pets/:petID/delete', async function(req,res){
+    let petID = req.params.petID;
+    await axios.delete('https://petstore.swagger.io/v2/pet/' + petID);
+    res.redirect('/pets')
+})
 
 // START SERVER
 app.listen(3000, function(req,res){
