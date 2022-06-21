@@ -3,9 +3,18 @@ const cors = require("cors");
 require("dotenv").config();
 const ObjectId = require("mongodb").ObjectId;
 const MongoUtil = require("./MongoUtil");
-
+const jwt = require('jsonwebtoken');
 
 const mongoUri = process.env.MONGO_URI;
+
+const generateAccessToken = (id, email) => {
+    return jwt.sign({
+        'user_id': id,
+        'email': email
+    }, process.env.TOKEN_SECRET, {
+        expiresIn: "1h"
+    });
+}
 
 let app = express();
 
@@ -15,17 +24,30 @@ app.use(express.json())
 // !! ENABLE CROSS ORIGIN RESOURCES SHARING
 app.use(cors())
 
+// !! Middleware for JWT authentication
+const checkIfAuthenticatedJWT = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+
+        jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+            if (err) {
+                return res.sendStatus(403);
+            }
+
+            req.user = user;
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+};
 
 async function main() {
     await MongoUtil.connect(mongoUri, "tgc13_food_sightings");
-
-    // What the client will send us:
-    // {
-    //    'description': <desc of the food>,
-    //    'food': <name of food>
-    //    'location' : <location>    
-    // }
-    app.post('/free_food_sighting', async function(req,res){
+  
+    app.post('/free_food_sighting', checkIfAuthenticatedJWT, async function(req,res){
         try {
             let description = req.body.description;
             let food = req.body.food;
@@ -81,7 +103,7 @@ async function main() {
     })
 
     // we use 'put' to indicate we are updating a document
-    app.put('/free_food_sightings/:foodid', async function(req,res){
+    app.put('/free_food_sightings/:foodid', checkIfAuthenticatedJWT, async function(req,res){
         let db = MongoUtil.getDB();
         let results = await db.collection('food').updateOne({
             '_id':ObjectId(req.params.foodid)
@@ -95,12 +117,48 @@ async function main() {
         res.json(results);
     })
 
-    app.delete('/free_food_sightings/:foodid', async function(req,res){
+    app.delete('/free_food_sightings/:foodid', checkIfAuthenticatedJWT, async function(req,res){
         let db = MongoUtil.getDB();
         let results = await db.collection('food').deleteOne({
             "_id": ObjectId(req.params.foodid)
         })
         res.json(results);
+    })
+
+    // User registration
+    app.post('/users', async function(req,res){
+        let db = MongoUtil.getDB();
+        let result = await db.collection('users').insertOne({
+            'email': req.body.email,
+            'password': req.body.password          
+        })
+        res.status(201);
+        res.json({
+            'message':'New user account'
+        })
+    })
+
+    // Get a JWT 
+    app.post('/login', async function(req,res){
+        let db = MongoUtil.getDB();
+        let user = await db.collection('users').findOne({
+            'email': req.body.email,
+            'password': req.body.password
+        })
+        if (user) {
+            let accessToken = generateAccessToken(user._id, user.email);
+            res.send({
+                accessToken
+            })
+        } else {
+            res.send({
+                'error':'Authenticaion error'
+            })
+        }
+    })
+
+    app.get('/profile', checkIfAuthenticatedJWT, async function(req,res){
+        res.send(req.user);
     })
 
 }
